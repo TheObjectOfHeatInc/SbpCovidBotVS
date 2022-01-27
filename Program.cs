@@ -19,7 +19,12 @@ namespace LehaCovidBotVS
         private static List<long> userId;
         private static string path;
         private static string botToken;
-        private static DateTime LastData;
+        public static string LastData { get; set; }
+
+        public static async Task SendGregMessageAsync(Exception ex)
+        {
+            await botClient.SendTextMessageAsync(145722603, $"АЛЯРМА У БОТА ПРОБЛЕМЫ:\n{ex.Message}\n{ex.StackTrace}", ParseMode.Html);
+        }
 
         private static async Task Main(string[] args)
         {
@@ -35,9 +40,9 @@ namespace LehaCovidBotVS
             }
             catch (Exception ex)
             {
+                await SendGregMessageAsync(ex);
                 Console.WriteLine($"Ощибки при запуске {ex.Message}\n{ex.StackTrace}");
             }
-            
         }
 
         public static async Task TestScheduler()
@@ -50,11 +55,10 @@ namespace LehaCovidBotVS
                     .Build();
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("send covid trigger", "send covid group")
-                .WithSimpleSchedule(x => x
-                .WithIntervalInSeconds(3)
-                //.WithIntervalInMinutes(1)
-                .RepeatForever())
-                //.WithCronSchedule("1 0 13-18 * * ?")
+                //.WithSimpleSchedule(x => x
+                //.WithIntervalInSeconds(1)
+                //.RepeatForever())
+                .WithCronSchedule("0 0/10 10-18 * * ?")
                 .Build();
             await scheduler.ScheduleJob(job, trigger);
         }
@@ -67,23 +71,24 @@ namespace LehaCovidBotVS
                 {
                     try
                     {
-                        Console.WriteLine($"Time send mes: {DateTime.Now}");
-                        foreach (long user in userId)
-                        {
-                            SendMessage(user);
-                        }
+                        if(userId != null)
+                        {                           
+                            foreach (long user in userId)
+                            {
+                                SendMessage(user);
+                            }
+                        }                       
                     }
                     catch (Exception ex)
                     {
+                        await SendGregMessageAsync(ex);
                         Console.WriteLine($"Error this send mes for scheduler: {ex.Message}\n{ex.StackTrace}");
                     }
                 }
                 catch (Exception ex)
                 {
-
-                    Console.WriteLine($"Ощибки при проверки даты {ex.Message}\n{ex.StackTrace}");
+                    await SendGregMessageAsync(ex);
                 }
-                
 
                 await Task.CompletedTask;
             }
@@ -127,8 +132,8 @@ namespace LehaCovidBotVS
                                 userId.Add(long.Parse(line));
                             }
                         }
-                        catch
-                        {
+                        catch 
+                        {                            
                             Console.WriteLine("Error txt to list");
                         }
                     }
@@ -151,11 +156,12 @@ namespace LehaCovidBotVS
                 try
                 {
                     SendMessage(msg.Chat.Id);
-                    //await botClient.SendTextMessageAsync(msg.Chat.Id, WebParcer.GetCallUrlString(url), ParseMode.Html);
+
                 }
-                catch (InvalidCastException error)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Error" + error);
+                    await SendGregMessageAsync(ex);
+                    Console.WriteLine("Error" + ex);
                 }
             }
         }
@@ -164,7 +170,10 @@ namespace LehaCovidBotVS
         {
             if (id != null)
             {
-                await botClient.SendTextMessageAsync(id, WebParcer.GetCallUrlString(url), ParseMode.Html);
+                if (WebParcer.CheckForUpdate(url))
+                {
+                    await botClient.SendTextMessageAsync(id, WebParcer.SendPrettyData(), ParseMode.Html);
+                }                
             }
         }
 
@@ -184,7 +193,7 @@ namespace LehaCovidBotVS
                         break;
                     }
                     else
-                    {                        
+                    {
                         isNewId = true;
                     }
                 }
