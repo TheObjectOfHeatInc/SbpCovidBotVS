@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "LehaCovidBotVS": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "environmentVariables": {
+        "Telegram": "5287815942:AAHLLJzvh-DjWlGR7KPRwxnh3UzFCSSN45Y"
+      },
+      "DockerfileRunArguments": "-v \"D:\\Work\\DokerChase:/userData:rw\""
+    }
+  }
+}

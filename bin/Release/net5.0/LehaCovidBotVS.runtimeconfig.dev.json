@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\Bonda\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Bonda\\.nuget\\packages"
+    ]
+  }
+}
