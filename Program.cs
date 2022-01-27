@@ -30,6 +30,7 @@ namespace LehaCovidBotVS
         {
             try
             {
+                WebParcer.CheckForUpdate(url);
                 Console.WriteLine("Start Program");
                 botToken = Environment.GetEnvironmentVariable("Telegram");
                 Console.WriteLine($"BotToken: {botToken}");
@@ -58,7 +59,7 @@ namespace LehaCovidBotVS
                 //.WithSimpleSchedule(x => x
                 //.WithIntervalInSeconds(1)
                 //.RepeatForever())
-                .WithCronSchedule("0 0/10 10-18 * * ?")
+                .WithCronSchedule("0 0/10 10-16 * * ?")
                 .Build();
             await scheduler.ScheduleJob(job, trigger);
         }
@@ -71,13 +72,13 @@ namespace LehaCovidBotVS
                 {
                     try
                     {
-                        if(userId != null)
-                        {                           
+                        if (userId != null)
+                        {
                             foreach (long user in userId)
                             {
-                                SendMessage(user);
+                                SendMessageEveryDay(user);
                             }
-                        }                       
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -132,8 +133,8 @@ namespace LehaCovidBotVS
                                 userId.Add(long.Parse(line));
                             }
                         }
-                        catch 
-                        {                            
+                        catch
+                        {
                             Console.WriteLine("Error txt to list");
                         }
                     }
@@ -147,21 +148,43 @@ namespace LehaCovidBotVS
             var msg = e.Message;
             if (msg.Text != null)
             {
-                if (msg.Text == "/start")
-                {
-                    CheckNewId(msg.Chat.Id);
-                }
-                Console.WriteLine("Message send");
-
                 try
                 {
-                    SendMessage(msg.Chat.Id);
-
+                    if (msg.Text == "/start")
+                    {
+                        CheckNewId(msg.Chat.Id);
+                    }else if (msg.Text != null)
+                    {
+                        SendMessage(msg.Chat.Id);
+                    }
+                    Console.WriteLine("Message send");
                 }
                 catch (Exception ex)
                 {
                     await SendGregMessageAsync(ex);
                     Console.WriteLine("Error" + ex);
+                }
+                
+
+                //try
+                //{
+                //    SendMessage(msg.Chat.Id);
+                //}
+                //catch (Exception ex)
+                //{
+                //    await SendGregMessageAsync(ex);
+                //    Console.WriteLine("Error" + ex);
+                //}
+            }
+        }
+
+        private static async void SendMessageEveryDay(long id)
+        {
+            if (id != null)
+            {
+                if (WebParcer.CheckForUpdate(url))
+                {
+                    await botClient.SendTextMessageAsync(id, WebParcer.SendPrettyData(), ParseMode.Html);
                 }
             }
         }
@@ -170,10 +193,7 @@ namespace LehaCovidBotVS
         {
             if (id != null)
             {
-                if (WebParcer.CheckForUpdate(url))
-                {
-                    await botClient.SendTextMessageAsync(id, WebParcer.SendPrettyData(), ParseMode.Html);
-                }                
+                await botClient.SendTextMessageAsync(id, WebParcer.RequestDataSend(), ParseMode.Html);
             }
         }
 

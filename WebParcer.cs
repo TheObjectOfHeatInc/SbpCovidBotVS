@@ -8,7 +8,7 @@ namespace LehaCovidBotVS
     internal class WebParcer
     {
         private static StringBuilder data = new StringBuilder();
-        private static StringBuilder prettyDataToSend = new StringBuilder();
+        private static StringBuilder prettyDataToSend = new StringBuilder("Бот был только что запущен прошу подождие 1 минуту");
 
         public static string GetUrlString(string url)
         {
@@ -89,7 +89,14 @@ namespace LehaCovidBotVS
 
         public static string SendPrettyData()
         {
+            Console.WriteLine("Отправляем данные");
             return prettyDataToSend.ToString();
+        }
+
+        public static string RequestDataSend()
+        {
+
+            return SendPrettyData();
         }
     }
 }
