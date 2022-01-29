@@ -9,6 +9,7 @@ namespace LehaCovidBotVS
     {
         private static StringBuilder data = new StringBuilder();
         private static StringBuilder prettyDataToSend = new StringBuilder("Бот был только что запущен прошу подождие 1 минуту");
+        private static DateTime dataNow;
 
         public static string GetUrlString(string url)
         {
@@ -35,14 +36,21 @@ namespace LehaCovidBotVS
 
         public static bool CheckForUpdate(string url)
         {
+            dataNow = DateTime.Now.Date;
+            string dataNowString = dataNow.ToString("yyyy-MM-dd");
             string lastData = Program.LastData;
+            
             if (data == null) data = new StringBuilder();
             data.Clear();
             data.Append(GetUrlString(url));
             string nowData = data.ToString().Split(",").First();
-            Console.WriteLine($"last:{lastData} now:{nowData} lats+now:{String.Equals(lastData, nowData)}");
+            string nowDataOnlyData = nowData.Split(" ").First();
 
-            if (String.Equals(lastData, nowData))
+            //Console.WriteLine($"Datanow:{nowDataOnlyData} SystemData:{dataNowString} lats+now:{String.Equals(nowDataOnlyData, dataNowString)}");
+            //Console.WriteLine($"last:{lastData}\nnow:{nowData} \nlats+now:{String.Equals(lastData, nowData)}");
+            //Console.WriteLine($"{String.Equals(lastData, nowData) && !(String.Equals(lastData, nowData))}");
+
+            if (String.Equals(lastData, nowData) && (String.Equals(lastData, nowData)))
             {
                 Console.WriteLine("Данные все еще Старые");
             }

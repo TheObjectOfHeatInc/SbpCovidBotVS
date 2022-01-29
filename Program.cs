@@ -30,7 +30,7 @@ namespace LehaCovidBotVS
         {
             try
             {
-                WebParcer.CheckForUpdate(url);
+                //WebParcer.CheckForUpdate(url);
                 Console.WriteLine("Start Program");
                 botToken = Environment.GetEnvironmentVariable("Telegram");
                 Console.WriteLine($"BotToken: {botToken}");
@@ -56,10 +56,10 @@ namespace LehaCovidBotVS
                     .Build();
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("send covid trigger", "send covid group")
-                //.WithSimpleSchedule(x => x
-                //.WithIntervalInSeconds(1)
-                //.RepeatForever())
-                .WithCronSchedule("0 0/10 10-16 * * ?")
+                .WithSimpleSchedule(x => x
+                .WithIntervalInSeconds(10)
+                .RepeatForever())
+                //.WithCronSchedule("0 0/10 10-16 * * ?")
                 .Build();
             await scheduler.ScheduleJob(job, trigger);
         }
@@ -72,7 +72,7 @@ namespace LehaCovidBotVS
                 {
                     try
                     {
-                        if (userId != null)
+                        if (userId != null && WebParcer.CheckForUpdate(url))
                         {
                             foreach (long user in userId)
                             {
@@ -153,7 +153,8 @@ namespace LehaCovidBotVS
                     if (msg.Text == "/start")
                     {
                         CheckNewId(msg.Chat.Id);
-                    }else if (msg.Text != null)
+                    }
+                    else if (msg.Text != null)
                     {
                         SendMessage(msg.Chat.Id);
                     }
@@ -164,7 +165,6 @@ namespace LehaCovidBotVS
                     await SendGregMessageAsync(ex);
                     Console.WriteLine("Error" + ex);
                 }
-                
 
                 //try
                 //{
@@ -182,10 +182,7 @@ namespace LehaCovidBotVS
         {
             if (id != null)
             {
-                if (WebParcer.CheckForUpdate(url))
-                {
-                    await botClient.SendTextMessageAsync(id, WebParcer.SendPrettyData(), ParseMode.Html);
-                }
+                await botClient.SendTextMessageAsync(id, WebParcer.SendPrettyData(), ParseMode.Html);
             }
         }
 
