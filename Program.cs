@@ -15,7 +15,7 @@ namespace LehaCovidBotVS
     internal class Program
     {
         private static TelegramBotClient? botClient;
-        private static string url = "https://raw.githubusercontent.com/alexei-kouprianov/COVID-19.SPb.monitoring/main/data/SPb.stopkoronavirus_archived.csv";
+        public static string url = "https://raw.githubusercontent.com/alexei-kouprianov/COVID-19.SPb.monitoring/main/data/SPb.stopkoronavirus_archived.csv";
         private static List<long> userId;
         private static string path;
         private static string botToken;
@@ -56,10 +56,10 @@ namespace LehaCovidBotVS
                     .Build();
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("send covid trigger", "send covid group")
-                .WithSimpleSchedule(x => x
-                .WithIntervalInSeconds(10)
-                .RepeatForever())
-                //.WithCronSchedule("0 0/10 10-16 * * ?")
+                //.WithSimpleSchedule(x => x
+                //.WithIntervalInSeconds(10)
+                //.RepeatForever())
+                .WithCronSchedule("0 0/10 10-16 * * ?")
                 .Build();
             await scheduler.ScheduleJob(job, trigger);
         }
