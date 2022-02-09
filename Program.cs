@@ -31,7 +31,7 @@ namespace LehaCovidBotVS
             try
             {
                 //WebParcer.CheckForUpdate(url);
-                Console.WriteLine("Start Program");
+                Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || Start Program");
                 botToken = Environment.GetEnvironmentVariable("Telegram");
                 Console.WriteLine($"BotToken: {botToken}");
 
@@ -101,7 +101,7 @@ namespace LehaCovidBotVS
             botClient.StartReceiving();
             botClient.OnMessage += OnMessageHandler;
             await TestScheduler();
-            Console.WriteLine("А ЗЕМЛЯ ТО ПЛОСКАЯ! КОНЕЦЦЦЦЦЦЦЦЦЦЦЦЦ");
+            Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || А ЗЕМЛЯ ТО ПЛОСКАЯ! КОНЕЦЦЦЦЦЦЦЦЦЦЦЦЦ");
             Thread.Sleep(Timeout.Infinite);
             botClient.StopReceiving();
         }
@@ -143,9 +143,9 @@ namespace LehaCovidBotVS
         }
 
         private static async void OnMessageHandler(object sender, MessageEventArgs e)
-        {
-            Console.WriteLine("Message");
+        {            
             var msg = e.Message;
+            Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || message from {msg.Chat.Id}");
             if (msg.Text != null)
             {
                 try
@@ -158,7 +158,7 @@ namespace LehaCovidBotVS
                     {
                         SendMessage(msg.Chat.Id);
                     }
-                    Console.WriteLine("Message send");
+                    Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || Message send");
                 }
                 catch (Exception ex)
                 {
@@ -205,7 +205,7 @@ namespace LehaCovidBotVS
                     if (userBD == id)
                     {
                         isNewId = false;
-                        Console.WriteLine($"User id: {userBD}");
+                        Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || User id: {userBD}");
                         botClient.SendTextMessageAsync(id, "Пользователь уже <b>добавлен</b>", ParseMode.Html);
                         break;
                     }
@@ -235,7 +235,7 @@ namespace LehaCovidBotVS
 
             string idToTxt = $"\r\n{id.ToString()}";
             File.AppendAllText(path, idToTxt, Encoding.UTF8);
-            Console.WriteLine($"Add new User: {id}");
+            Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || Add new User: {id}");
         }
     }
 }

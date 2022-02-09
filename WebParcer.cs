@@ -47,17 +47,13 @@ namespace LehaCovidBotVS
             string nowData = data.ToString().Split(",").First();
             string nowDataOnlyData = nowData.Split(" ").First();
 
-            //Console.WriteLine($"Datanow:{nowDataOnlyData} SystemData:{dataNowString} lats+now:{String.Equals(nowDataOnlyData, dataNowString)}");
-            //Console.WriteLine($"last:{lastData}\nnow:{nowData} \nlats+now:{String.Equals(lastData, nowData)}");
-            //Console.WriteLine($"{String.Equals(lastData, nowData) && !(String.Equals(lastData, nowData))}");
-
             if (String.Equals(lastData, nowData) && (String.Equals(lastData, nowData)))
             {
-                Console.WriteLine("Данные все еще Старые");
+                Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || Данные все еще Старые");
             }
             else
             {
-                Console.WriteLine("Обнаружены новые данные");
+                Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || Обнаружены новые данные");
                 Program.LastData = nowData;
                 GetStringToPretty(data);
                 return true;
@@ -98,7 +94,7 @@ namespace LehaCovidBotVS
 
         public static string SendPrettyData()
         {
-            Console.WriteLine("Отправляем данные");
+            Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || Отправляем данные");
 
             if(string.Equals(starText.ToString(), prettyDataToSend.ToString()))
             {
