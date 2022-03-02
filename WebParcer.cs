@@ -89,7 +89,8 @@ namespace LehaCovidBotVS
         {
             string[] dataSplit = data.ToString().Split(',');
             prettyDataToSend.Clear();
-            prettyDataToSend.Append($"Короновирус в СПб \n=====================\n{dataSplit[0].Trim()}\n\nЗа сегодня: <b>{dataSplit[1]}</b>\n=====================");
+            //prettyDataToSend.Append($"Короновирус в СПб \n=====================\n{dataSplit[0].Trim()}\n\nЗа сегодня: <b>{dataSplit[1]}</b>\n=====================");
+            prettyDataToSend.Append($"{dataSplit[1]} за {dataSplit[0].Trim()} ");
         }
 
         public static string SendPrettyData()
