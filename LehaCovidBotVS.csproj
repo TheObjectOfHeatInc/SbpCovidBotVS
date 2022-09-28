@@ -3,7 +3,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <Version>0.0.4</Version>
+    <Version>0.5</Version>
     <Authors>LehaCovidBotVS</Authors>
     <Company>LehaCovidBotVS</Company>
   </PropertyGroup>

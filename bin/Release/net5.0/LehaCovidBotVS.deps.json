@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "LehaCovidBotVS/0.0.4": {
+      "LehaCovidBotVS/0.5": {
         "dependencies": {
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.11.1",
           "Quartz": "3.3.3",
@@ -851,7 +851,7 @@
     }
   },
   "libraries": {
-    "LehaCovidBotVS/0.0.4": {
+    "LehaCovidBotVS/0.5": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

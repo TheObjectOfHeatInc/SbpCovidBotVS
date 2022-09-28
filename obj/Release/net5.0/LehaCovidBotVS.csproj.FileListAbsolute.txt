@@ -3,7 +3,6 @@ D:\Work\LehaCovidBotVS\LehaCovidBotVS\bin\Release\net5.0\LehaCovidBotVS.deps.jso
 D:\Work\LehaCovidBotVS\LehaCovidBotVS\bin\Release\net5.0\LehaCovidBotVS.runtimeconfig.json
 D:\Work\LehaCovidBotVS\LehaCovidBotVS\bin\Release\net5.0\LehaCovidBotVS.runtimeconfig.dev.json
 D:\Work\LehaCovidBotVS\LehaCovidBotVS\bin\Release\net5.0\LehaCovidBotVS.dll
-D:\Work\LehaCovidBotVS\LehaCovidBotVS\bin\Release\net5.0\ref\LehaCovidBotVS.dll
 D:\Work\LehaCovidBotVS\LehaCovidBotVS\bin\Release\net5.0\LehaCovidBotVS.pdb
 D:\Work\LehaCovidBotVS\LehaCovidBotVS\bin\Release\net5.0\Microsoft.Extensions.Logging.Abstractions.dll
 D:\Work\LehaCovidBotVS\LehaCovidBotVS\bin\Release\net5.0\Microsoft.Win32.SystemEvents.dll
@@ -30,3 +29,4 @@ D:\Work\LehaCovidBotVS\LehaCovidBotVS\obj\Release\net5.0\LehaCovidBotVS.dll
 D:\Work\LehaCovidBotVS\LehaCovidBotVS\obj\Release\net5.0\ref\LehaCovidBotVS.dll
 D:\Work\LehaCovidBotVS\LehaCovidBotVS\obj\Release\net5.0\LehaCovidBotVS.pdb
 D:\Work\LehaCovidBotVS\LehaCovidBotVS\obj\Release\net5.0\LehaCovidBotVS.genruntimeconfig.cache
+D:\Work\LehaCovidBotVS\LehaCovidBotVS\obj\Release\net5.0\refint\LehaCovidBotVS.dll

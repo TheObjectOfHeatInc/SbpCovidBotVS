@@ -17,13 +17,20 @@ namespace LehaCovidBotVS
         private static TelegramBotClient? botClient;
         public static string url = "https://raw.githubusercontent.com/alexei-kouprianov/COVID-19.SPb.monitoring/main/data/SPb.stopkoronavirus_archived.csv";
         private static List<long> userId;
-        private static string path;
+        private static string pathIdBD;
+        private static string pathData;
         private static string botToken;
+        private static string versionProg;
         public static string LastData { get; set; }
 
         public static async Task SendGregMessageAsync(Exception ex)
         {
             await botClient.SendTextMessageAsync(145722603, $"АЛЯРМА У БОТА ПРОБЛЕМЫ:\n{ex.Message}\n{ex.StackTrace}", ParseMode.Html);
+        }
+
+        public static async Task SendGregMessageAsync(String Text)
+        {
+            await botClient.SendTextMessageAsync(145722603, $"Версия {Text.ToString()}, ParseMode.Html");
         }
 
         private static async Task Main(string[] args)
@@ -35,9 +42,15 @@ namespace LehaCovidBotVS
                 botToken = Environment.GetEnvironmentVariable("Telegram");
                 Console.WriteLine($"BotToken: {botToken}");
 
-                path = @"/userData/UserId.txt";
+                pathIdBD = @"/userData/UserId.txt";
+                pathData = @"/userData/Data.txt";
                 BDTextToList();
+                BDText();
+
+
                 BotStart();
+
+                
             }
             catch (Exception ex)
             {
@@ -59,9 +72,10 @@ namespace LehaCovidBotVS
                 //.WithSimpleSchedule(x => x
                 //.WithIntervalInSeconds(10)
                 //.RepeatForever())
-                .WithCronSchedule("0 0/10 10-16 * * ?")
+                .WithCronSchedule("0 0/10 10-19 * * ?")
                 .Build();
             await scheduler.ScheduleJob(job, trigger);
+         
         }
 
         public class EveryDaySendJob : IJob
@@ -83,7 +97,7 @@ namespace LehaCovidBotVS
                     catch (Exception ex)
                     {
                         await SendGregMessageAsync(ex);
-                        Console.WriteLine($"Error this send mes for scheduler: {ex.Message}\n{ex.StackTrace}");
+                        Console.WriteLine($"Error this send mes for scheduler: {ex.Message}\n{ex.StackTrace} ");
                     }
                 }
                 catch (Exception ex)
@@ -97,30 +111,47 @@ namespace LehaCovidBotVS
 
         private static async Task BotStart()
         {
-            botClient = new TelegramBotClient(botToken);
-            botClient.StartReceiving();
-            botClient.OnMessage += OnMessageHandler;
-            await TestScheduler();
-            Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || А ЗЕМЛЯ ТО ПЛОСКАЯ! КОНЕЦЦЦЦЦЦЦЦЦЦЦЦЦ");
-            Thread.Sleep(Timeout.Infinite);
-            botClient.StopReceiving();
+            try 
+            {
+                botClient = new TelegramBotClient(botToken);
+                botClient.StartReceiving();
+                botClient.OnMessage += OnMessageHandler;
+
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+                versionProg = fvi.FileVersion;
+                Console.WriteLine($"Старт версии {versionProg}");
+                versionProg = $"Версия: {versionProg} \nСделано с любовью 🤔?\n∠( ᐛ 」∠)＿ Конешно дорохой!";
+
+                await TestScheduler();
+                Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || А ЗЕМЛЯ ТО ПЛОСКАЯ! КОНЕЦЦЦЦЦЦЦЦЦЦЦЦЦ");
+                
+                Thread.Sleep(Timeout.Infinite);
+                botClient.StopReceiving();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("!!!!!Error!!!!!! Проблемы со стартом" + ex);
+                await SendGregMessageAsync(ex);
+            }
+            
         }
 
         private static void BDTextToList()
         {
-            if (!File.Exists(path))
+            if (!File.Exists(pathIdBD))
             {
-                Console.WriteLine($"Create txt file. Path: {path}");
-                using (StreamWriter sw = File.CreateText(path)) { }
+                Console.WriteLine($"Create txt file. Path: {pathIdBD}");
+                using (StreamWriter sw = File.CreateText(pathIdBD)) { }
             }
             else
             {
-                Console.WriteLine($"Find txt file. Path: {path}");
+                Console.WriteLine($"Find txt file. Path: {pathIdBD}");
             }
 
-            using (StreamReader sr = File.OpenText(path))
+            using (StreamReader sr = File.OpenText(pathIdBD))
             {
-                string[] readText = File.ReadAllLines(path);
+                string[] readText = File.ReadAllLines(pathIdBD);
                 if (readText.Length != 0)
                 {
                     userId = new List<long>();
@@ -135,10 +166,38 @@ namespace LehaCovidBotVS
                         }
                         catch
                         {
-                            Console.WriteLine("Error txt to list");
+                            Console.WriteLine("!!!!!!Error!!!!!! txt to list ");
                         }
                     }
                 }
+            }
+        }
+
+        private static void BDText()
+        {
+            if (!File.Exists(pathData))
+            {
+                Console.WriteLine($"Create txt file. Path: {pathData}");
+                using (StreamWriter sw = File.CreateText(pathData)) { }
+            }
+            else
+            {
+                Console.WriteLine($"Find txt file. Path: {pathData}");
+            }
+
+            using (StreamReader sr = File.OpenText(pathData))
+            {
+                string readText = File.ReadAllText(pathData);
+                Console.WriteLine(readText.Length);
+                if (readText.Length != 0)
+                {
+                    LastData = readText;         
+                    Console.WriteLine($"Old data. data: {LastData}");
+                }
+                else
+                {
+                    Console.WriteLine($"Нету данных о ковиде в базе");
+                }               
             }
         }
 
@@ -154,16 +213,21 @@ namespace LehaCovidBotVS
                     {
                         CheckNewId(msg.Chat.Id);
                     }
+                    else if(msg.Text == "V")
+                    {
+                        SendVersionMessage(msg.Chat.Id);
+                    }
                     else if (msg.Text != null)
                     {
                         SendMessage(msg.Chat.Id);
                     }
+
                     Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || Message send");
                 }
                 catch (Exception ex)
                 {
                     await SendGregMessageAsync(ex);
-                    Console.WriteLine("Error" + ex);
+                    Console.WriteLine("!!!!!Error!!!!!!  Проблемы с OnMessageHandler" + ex);
                 }
 
                 //try
@@ -182,16 +246,51 @@ namespace LehaCovidBotVS
         {
             if (id != null)
             {
-                await botClient.SendTextMessageAsync(id, WebParcer.SendPrettyData(), ParseMode.Html);
+                try
+                {
+                    await botClient.SendTextMessageAsync(id, WebParcer.SendPrettyData(), ParseMode.Html);
+                }
+                catch (Exception ex)
+                {
+                    await SendGregMessageAsync(ex);
+                    Console.WriteLine("!!!!!Error!!!!!!  Проблемы с SendMessageEveryDay" + ex);
+                }
+                
             }
         }
 
         private static async void SendMessage(long id)
         {
-            if (id != null)
+            try
             {
-                await botClient.SendTextMessageAsync(id, WebParcer.RequestDataSend(), ParseMode.Html);
+                if (id != null)
+                {
+                    await botClient.SendTextMessageAsync(id, WebParcer.RequestDataSend(), ParseMode.Html);
+                }
             }
+            catch (Exception ex)
+            {
+                await SendGregMessageAsync(ex);
+                Console.WriteLine("!!!!!Error!!!!!! Проблемы с SendMessage" + ex);
+            }
+           
+        }
+
+        private static async void SendVersionMessage(long id)
+        {
+            try
+            {
+                if (id != null)
+                {
+                    await botClient.SendTextMessageAsync(id, versionProg);
+                }
+            }
+            catch (Exception ex)
+            {
+                await SendGregMessageAsync(ex);
+                Console.WriteLine("!!!!!Error!!!!!! Проблемы с SendVersionMessage" + ex);
+            }
+
         }
 
         private static void CheckNewId(long id)
@@ -234,8 +333,16 @@ namespace LehaCovidBotVS
             userId.Add(id);
 
             string idToTxt = $"\r\n{id.ToString()}";
-            File.AppendAllText(path, idToTxt, Encoding.UTF8);
+            File.AppendAllText(pathIdBD, idToTxt, Encoding.UTF8);
             Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || Add new User: {id}");
+        }
+
+        public static void AddDataCovid(string data)
+        {
+
+            LastData = data;
+            File.WriteAllText(pathData, data, Encoding.UTF8);
+            Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || Add new data: {data}");
         }
     }
 }

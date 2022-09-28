@@ -5289,7 +5289,7 @@
     "C:\\Users\\Bonda\\.nuget\\packages\\": {}
   },
   "project": {
-    "version": "0.0.4",
+    "version": "0.5.0",
     "restore": {
       "projectUniqueName": "D:\\Work\\LehaCovidBotVS\\LehaCovidBotVS\\LehaCovidBotVS.csproj",
       "projectName": "LehaCovidBotVS",
@@ -5352,7 +5352,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   }

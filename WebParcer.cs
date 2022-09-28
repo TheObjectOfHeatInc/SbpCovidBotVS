@@ -29,7 +29,7 @@ namespace LehaCovidBotVS
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error getting info from URL :{url}", ex);
+                Console.WriteLine($"MM/dd/yyyy HH:mm:ss Error getting info from URL :{url}", ex);
             }
 
             return null;
@@ -47,14 +47,15 @@ namespace LehaCovidBotVS
             string nowData = data.ToString().Split(",").First();
             string nowDataOnlyData = nowData.Split(" ").First();
 
+            Console.WriteLine($"ETST {lastData} {nowData}");
             if (String.Equals(lastData, nowData) && (String.Equals(lastData, nowData)))
             {
                 Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || Данные все еще Старые");
             }
             else
             {
-                Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || Обнаружены новые данные");
-                Program.LastData = nowData;
+                Console.WriteLine($"{ DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") } || Обнаружены новые данные");               
+                Program.AddDataCovid(nowData);
                 GetStringToPretty(data);
                 return true;
             }
